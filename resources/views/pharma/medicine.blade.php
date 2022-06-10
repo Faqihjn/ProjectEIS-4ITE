@@ -42,8 +42,8 @@
                         <th style="padding:10px">Created Date</th>
                         <th style="padding:10px">Expired Date</th>
                         <th style="padding:10px"></th>
-                        <th><a class="btn btn-success" href="#">Add Medicine</a></th>
-                        
+                        <th style="padding:10px"><a class="btn btn-success" style="padding:10px" href="{{url('add')}}">Add Medicine</a></th>
+
                     </tr>
                     @foreach($data as $medicine)
                     <tr align="center" style="background-color:skyblue">
@@ -51,7 +51,7 @@
                         <td style="padding:10px">{{$medicine->stock}}</td>
                         <td style="padding:10px">{{$medicine->description}}</td>
                         <td style="padding:10px">{{$medicine->created_at}}</td>
-                        <td style="padding:10px">{{$medicine->expired_date}}</td>
+                        <td style="padding:10px">{{$medicine->expired}}</td>
                         
                         
                         <!-- if an admin click Approved button, it will gets specific id from database > appointment   -->

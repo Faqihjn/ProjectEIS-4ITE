@@ -46,17 +46,19 @@ Route::get('/showappointment',[AdminController::class,'showappointment']);
 Route::get('/approved/{id}',[AdminController::class,'approved']);
 Route::get('/canceled/{id}',[AdminController::class,'canceled']);
 
-Route::get('/calendar', function(){
-    $event = new Event;
+// Route::get('/calendar', function(){
+//     $event = new Event;
 
-    $event->name = "test";
-    $event->startDateTime = Carbon\Carbon\now();
-    $event->endDateTime = Carbon\Carbon\now()->addHour();
+//     $event->name = "test";
+//     $event->startDateTime = Carbon\Carbon\now();
+//     $event->endDateTime = Carbon\Carbon\now()->addHour();
 
-    $event->save();
+//     $event->save();
     
-    $e = Event::get();
-    dd($e);
-});
+//     $e = Event::get();
+//     dd($e);
+// });
 
 Route::get('/medicine',[PharmacistController::class,'addview']);
+Route::get('/add',[PharmacistController::class,'add']);
+Route::post('/create',[PharmacistController::class,'create']);

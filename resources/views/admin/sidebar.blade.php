@@ -80,7 +80,7 @@
           </li>
           @endif
           
-          @if(Auth::user()->usertype=='1')
+          @if(Auth::user()->usertype=='3')
           <li class="nav-item menu-items">
             <a class="nav-link" href="{{url('medicine')}}">
               <span class="menu-icon">
