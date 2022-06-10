@@ -65,6 +65,57 @@ class PharmacistController extends Controller
         }
         
     }
+
+    public function edit($id)
+    {
+        if(Auth::id())
+        {
+            if(Auth::user()->usertype==3)
+            {
+                $data = Medicine:: find($id);
+                return view('pharma.edit_medicine', compact('data'));        
+            }
+            else{
+                return redirect()->back();
+            }
+        }
+        else
+        {
+            return redirect('login');
+        }
+        
+    }
+
+    public function update(Request $request, $id)
+    {
+        $data = Medicine:: find($id);
+       if(!$data){
+        return redirect()->back()->with('error', 'Medicine Data Not Found');
+       }
+        
+        $data->name= $request->name;
+            $data->stock= $request->stock;
+            $data->description= $request->description;
+            $data->created_at= $request->created_at;
+            $data->expired= $request->expired;
+        
+        $data->save();
+        return redirect()->to('/medicine')->with('message', 'Medicine Update Successfully');
+        
+    }
+
+    public function destroy($id)
+    {
+       
+    
+      $data = Medicine:: find($id);
+        if(!$data){
+             return redirect()->back()->with('error', 'Medicine Data Not Found');
+            }
+            $data->delete();
+        return view('pharma.medicine');        
+        
+    }
     
 
 }

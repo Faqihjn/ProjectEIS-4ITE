@@ -30,10 +30,7 @@
 
         <div class="container-fluid page-body-wrapper">
             <div align="center" style="padding-top: 100px">            
-                <span>
-                  {{$data->links()}}
-                </span>
-
+           
                 <table>
                     <tr style="background-color:black;">
                         <th style="padding:10px">Medicine name</th>
@@ -55,11 +52,17 @@
                         
                         
                         <!-- if an admin click Approved button, it will gets specific id from database > appointment   -->
-                        <td><a class="btn btn-success" href="#">Edit</a></td>
+                        <td><a class="btn btn-success" href="{{ route('edit', $medicine->id) }}">Edit</a></td>
 
                         <!-- if an admin click Approved button, it will gets specific id from database > appointment   -->
-                        <td><a class="btn btn-danger" href="#">Delete</a></td>
-                        
+                        <form action="{{ route('destroy', $medicine->id) }}" method="POST">
+                          @csrf 
+                          @method('DELETE')
+                          <button type="submit" class="btn btn-danger text-white">
+                            delete
+                          </button>
+                        </form>
+              
                       </tr>
                     @endforeach
                 </table>

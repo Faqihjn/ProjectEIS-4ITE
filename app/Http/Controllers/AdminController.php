@@ -13,7 +13,7 @@ class AdminController extends Controller
     public function addview(){
         if(Auth::id())
         {
-            if(Auth::user()->usertype==1)
+            if(Auth::user()->usertype==2)
             {
                 return view('admin.add_doctor');        
             }

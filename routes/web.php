@@ -62,3 +62,6 @@ Route::get('/canceled/{id}',[AdminController::class,'canceled']);
 Route::get('/medicine',[PharmacistController::class,'addview']);
 Route::get('/add',[PharmacistController::class,'add']);
 Route::post('/create',[PharmacistController::class,'create']);
+Route::get('/edit/{id}',[PharmacistController::class,'edit'])->name('edit');
+Route::put('/update/{id}', [PharmacistController::class, 'update'])->name('update');
+Route::delete('/destroy/{id}', [PharmacistController::class, 'destroy'])->name('destroy');
