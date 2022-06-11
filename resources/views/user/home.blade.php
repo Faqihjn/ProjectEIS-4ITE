@@ -17,6 +17,13 @@
           {{session()->get('message')}}
       </div>
     @endif
+    @if(session()->has('message2'))
+
+      <div class="alert alert-danger" role="alert">
+        <button type="button" class="close" data-dismiss="alert">x</button>
+          {{session()->get('message2')}}
+      </div>
+    @endif
 
   <div class="page-hero bg-image overlay-dark" style="background-image: url(../assets/img/bg_image_1.jpg);">
     <div class="hero-section">

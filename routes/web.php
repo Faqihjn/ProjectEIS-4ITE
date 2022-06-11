@@ -65,3 +65,13 @@ Route::post('/create',[PharmacistController::class,'create']);
 Route::get('/edit/{id}',[PharmacistController::class,'edit'])->name('edit');
 Route::put('/update/{id}', [PharmacistController::class, 'update'])->name('update');
 Route::delete('/destroy/{id}', [PharmacistController::class, 'destroy'])->name('destroy');
+
+Route::get('/doctor_view',[AdminController::class,'doctorview']);
+Route::get('/edit_doctor/{id}',[AdminController::class,'edit_doctor'])->name('edit_doctor');
+Route::put('/update_doctor/{id}', [AdminController::class, 'update_doctor'])->name('update_doctor');
+Route::delete('/destroy_doctor/{id}', [AdminController::class, 'destroy_doctor'])->name('destroy_doctor');
+
+Route::get('/print_medicine',[PharmacistController::class,'print_medicine']);
+Route::get('/print_doctor',[AdminController::class,'print_doctor']);
+Route::get('/print_admin',[AdminController::class,'print_admin']);
+Route::get('/print_user',[HomeController::class,'print_user']);

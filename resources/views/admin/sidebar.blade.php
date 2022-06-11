@@ -68,6 +68,16 @@
             </a>
           </li>
           @endif
+          @if(Auth::user()->usertype=='2')
+          <li class="nav-item menu-items">
+            <a class="nav-link" href="{{url('doctor_view')}}">
+              <span class="menu-icon">
+                <i class="mdi mdi-file-document-box"></i>
+              </span>
+              <span class="menu-title">Doctors List</span>
+            </a>
+          </li>
+          @endif
           
           @if(Auth::user()->usertype=='1')
           <li class="nav-item menu-items">

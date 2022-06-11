@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Medicine;
+use PDF;
 
 class PharmacistController extends Controller
 {
@@ -72,7 +73,11 @@ class PharmacistController extends Controller
         {
             if(Auth::user()->usertype==3)
             {
-                $data = Medicine:: find($id);
+                $data = medicine:: find($id);
+                if(!$data){
+                    return redirect()->back()->with('error', 'Medicine Data Not Found');
+                }
+                
                 return view('pharma.edit_medicine', compact('data'));        
             }
             else{
@@ -100,22 +105,35 @@ class PharmacistController extends Controller
             $data->expired= $request->expired;
         
         $data->save();
-        return redirect()->to('/medicine')->with('message', 'Medicine Update Successfully');
+        return redirect()->to('/medicine')->with('message', 'Medicine Updated Successfully');
         
     }
 
     public function destroy($id)
     {
-       
-    
-      $data = Medicine:: find($id);
-        if(!$data){
-             return redirect()->back()->with('error', 'Medicine Data Not Found');
-            }
-            $data->delete();
-        return view('pharma.medicine');        
-        
+      $data = medicine:: find($id);
+      $data->delete();        
+      return redirect()->to('/medicine')->with('message', 'Medicine Deleted Successfully');
     }
     
 
+    public function print_medicine()
+    {
+        if(Auth::id())
+        {
+            if(Auth::user()->usertype==3)
+            {
+                $data = Medicine::all();
+                $pdf= PDF::loadView('pdf.print_medicine',compact('data'));          
+                return $pdf->download('medicine.pdf');        
+            }
+            else{
+                return redirect()->back();
+            }
+        }
+        else
+        {
+            return redirect('login');
+        }  
+    }
 }

@@ -27,10 +27,15 @@
         @include('admin.sidebar')
 
         @include('admin.navbar')
-
         <div class="container-fluid page-body-wrapper">
-            <div align="center" style="padding-top: 100px">            
-           
+            <div align="center" style="padding-top: 100px">
+            @if(session()->has('message'))
+
+            <div class="alert alert-danger" role="alert">
+                <button type="button" class="close" data-bs-dismiss="alert">x</button>
+                {{session()->get('message')}}
+            </div>
+            @endif            
                 <table>
                     <tr style="background-color:black;">
                         <th style="padding:10px">Medicine name</th>
@@ -38,8 +43,8 @@
                         <th style="padding:10px">Description</th>
                         <th style="padding:10px">Created Date</th>
                         <th style="padding:10px">Expired Date</th>
-                        <th style="padding:10px"></th>
-                        <th style="padding:10px"><a class="btn btn-success" style="padding:10px" href="{{url('add')}}">Add Medicine</a></th>
+                        <th style="padding:10px"><a class="btn btn-success" href="{{url('add')}}">Add Medicine</a></th>
+                        <th style="padding:10px"><a href="{{url('print_medicine')}}" target="_blank"class="btn btn-primary">Print PDF</a></th>
 
                     </tr>
                     @foreach($data as $medicine)
@@ -49,12 +54,11 @@
                         <td style="padding:10px">{{$medicine->description}}</td>
                         <td style="padding:10px">{{$medicine->created_at}}</td>
                         <td style="padding:10px">{{$medicine->expired}}</td>
-                        
-                        
                         <!-- if an admin click Approved button, it will gets specific id from database > appointment   -->
-                        <td><a class="btn btn-success" href="{{ route('edit', $medicine->id) }}">Edit</a></td>
-
+                        <td>
+                          <div>
                         <!-- if an admin click Approved button, it will gets specific id from database > appointment   -->
+                        <a class="btn btn-success" href="{{ route('edit', $medicine->id) }}">Edit</a>
                         <form action="{{ route('destroy', $medicine->id) }}" method="POST">
                           @csrf 
                           @method('DELETE')
@@ -62,7 +66,8 @@
                             delete
                           </button>
                         </form>
-              
+                        </div>
+                        </td>          
                       </tr>
                     @endforeach
                 </table>

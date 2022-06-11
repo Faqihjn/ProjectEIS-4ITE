@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 use App\Models\Doctor;
 use App\Models\Appointment;
+use PDF;
 
 class AdminController extends Controller
 {
@@ -16,6 +18,26 @@ class AdminController extends Controller
             if(Auth::user()->usertype==2)
             {
                 return view('admin.add_doctor');        
+            }
+            else{
+                return redirect()->back();
+            }
+        }
+        else
+        {
+            return redirect('login');
+        }
+    }
+
+    public function doctorview()
+    {
+        if(Auth::id())
+        {
+            if(Auth::user()->usertype==2)
+            {
+                $data=doctor::paginate(5);
+                //send data to view
+                return view('admin.view_doctor',compact('data'));        
             }
             else{
                 return redirect()->back();
@@ -64,7 +86,98 @@ class AdminController extends Controller
         return redirect()->back()->with('message', 'Doctor Added Successfully');
     }
 
-    public function showappointment()
+    public function edit_doctor($id)
+    {
+        if(Auth::id())
+        {
+            if(Auth::user()->usertype==2)
+            {
+                $doctor = Doctor:: find($id);
+                if(!$doctor){
+                    return redirect()->back()->with('error', 'Doctor Not Found');
+                }
+                
+                return view('admin.edit_doctor', compact('doctor'));        
+            }
+            else{
+                return redirect()->back();
+            }
+        }
+        else
+        {
+            return redirect('login');
+        }
+        
+    }
+
+    public function update_doctor(Request $request, $id)
+    {
+        $doctor = Doctor:: find($id);
+       if(!$doctor){ 
+        return redirect()->back()->with('error', 'Doctor Not Found');
+       }
+        
+        $doctor->name= $request->name;
+        $doctor->phone= $request->phone;
+        $doctor->speciality= $request->speciality;
+        $doctor->room= $request->room;
+        $image=$request->file;
+            if($request -> hasFile('file')){
+                
+                $path= 'doctorimage'.$doctor->image;
+                if(File::exists($path)){
+                    File::delete($path);
+                }
+
+            $imagename=time().'.'.$image->getClientOriginalExtension();
+            $request->file->move('doctorimage',$imagename);
+            $doctor->image=$imagename;
+            }
+        
+        $doctor->update();
+        return redirect()->to('/doctor_view')->with('message', 'Doctor Updated Successfully');
+        
+    }
+
+    public function destroy_doctor($id)
+    {
+      $doctor = doctor:: find($id);
+      $path= 'doctorimage'.$doctor->image;
+      if(File::exists($path))
+      {
+        File::delete($path);
+      }
+      $doctor->delete();        
+      return redirect()->to('/doctor_view')->with('message', 'Doctor Deleted Successfully');
+    }
+    
+
+    public function print_doctor()
+    {
+        if(Auth::id())
+        {
+            if(Auth::user()->usertype==2)
+            {
+                $data = Doctor::all();
+                $pdf= PDF::loadView('pdf.print_doctor',compact('data'));          
+                return $pdf->download('doctor.pdf');        
+            }
+            else{
+                return redirect()->back();
+            }
+        }
+        else
+        {
+            return redirect('login');
+        }  
+    }
+
+#########################################################################################################################    
+# |     Admin                                            ^      Doctor Manajement                                       #
+# v                                                      |                                                              # 
+#########################################################################################################################
+    
+public function showappointment()
     {
         if(Auth::id())
         {
@@ -133,6 +246,25 @@ class AdminController extends Controller
         // $data->save();
         // return redirect()->back();
     }
-
+    
+    public function print_admin()
+    {
+        if(Auth::id())
+        {
+            if(Auth::user()->usertype==1)
+            {
+                $data = Appointment::all();
+                $pdf= PDF::loadView('pdf.print_admin',compact('data'));          
+                return $pdf->download('admin.pdf');        
+            }
+            else{
+                return redirect()->back();
+            }
+        }
+        else
+        {
+            return redirect('login');
+        }  
+    }
    
 }

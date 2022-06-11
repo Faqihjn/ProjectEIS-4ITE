@@ -43,38 +43,35 @@
 
                 <table>
                     <tr style="background-color:black;">
-                        <th style="padding:10px">Customer name</th>
-                        <th style="padding:10px">Email</th>
+                        <th style="padding:10px">Doctor name</th>
                         <th style="padding:10px">Phone</th>
-                        <th style="padding:10px">Doctor Name</th>
-                        <th style="padding:10px">Date</th>
-                        <th style="padding:10px">Message</th>
-                        <th style="padding:10px">Status</th>
-
-                        <th style="padding:10px">Approve</th>
-                        <th style="padding:10px">Cancel</th>
-                        <th style="padding:10px"><a href="{{url('print_admin')}}" target="_blank"class="btn btn-primary">Print PDF</a></th>
-                        
+                        <th style="padding:10px">Speciality</th>
+                        <th style="padding:10px">Room</th>
+                        <th style="padding:10px">Image</th>
+                        <th style="padding:10px">Action</th>
+                        <th style="padding:10px"><a href="{{url('print_doctor')}}" target="_blank"class="btn btn-primary">Print PDF</a></th>
+                                                
                     </tr>
-                    @foreach($data as $appoint)
+                    @foreach($data as $doctors)
                     <tr align="center" style="background-color:skyblue">
-                        <td style="padding:10px">{{$appoint->name}}</td>
-                        <td style="padding:10px">{{$appoint->email}}</td>
-                        <td style="padding:10px">{{$appoint->phone}}</td>
-                        <td style="padding:10px">{{$appoint->doctor}}</td>
-                        <td style="padding:10px">{{$appoint->date}}</td>
-                        <td style="padding:10px">{{$appoint->message}}</td>
-                        <td style="padding:10px">{{$appoint->status}}</td>
-
-                         @if($appoint->status=="In Progress")
-                        <!-- if an admin click Approved button, it will gets specific id from database > appointment   -->
-                        <td><a class="btn btn-success" href="{{url('approved', Crypt::encryptString($appoint->id))}}">Approved</a></td>
-
-                        <!-- if an admin click Approved button, it will gets specific id from database > appointment   -->
-                        <td><a class="btn btn-danger" href="{{url('canceled', Crypt::encryptString($appoint->id))}}">Canceled</a></td>
-                        @endif
-                        <td></td>
-                        <td></td>
+                        <td style="padding:10px">{{$doctors->name}}</td>
+                        <td style="padding:10px">{{$doctors->phone}}</td>
+                        <td style="padding:10px">{{$doctors->speciality}}</td>
+                        <td style="padding:10px">{{$doctors->room}}</td>
+                        <td style="padding:10px"><img width=100 height=100 src="doctorimage/{{$doctors->image}}" alt=""></td>
+                        <td>
+                          <div>
+                            <!-- if an admin click Approved button, it will gets specific id from database > appointment   -->
+                                <a class="btn btn-success" href="{{ route('edit_doctor', $doctors->id) }}">Edit</a>
+                                <form action="{{ route('destroy_doctor', $doctors->id) }}" method="POST">
+                                    @csrf 
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger text-white">
+                                        delete
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
                       </tr>
                     @endforeach
                 </table>

@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\Doctor;
 use App\Models\Appointment;
+use PDF;
 
 class HomeController extends Controller
 {
@@ -137,6 +138,27 @@ class HomeController extends Controller
         $data->delete();
         return redirect()->back();
 
+    }
+
+    public function print_user()
+    {
+        if(Auth::id())
+        {
+            if(Auth::user()->usertype==0)
+            {
+           //specific id for appointment. the value takes from database user>id
+           $userid=Auth::user ()->id;
+           //get specific appointment for the specific user
+           $appoint=appointment::where('user_id',$userid)->get();
+            
+           $pdf= PDF::loadView('pdf.print_user',compact('appoint'));          
+           return $pdf->download('appointment.pdf');
+            }
+        }
+        else
+        {
+            return redirect()->back();
+        }  
     }
 }
 
