@@ -75,6 +75,7 @@
                         @endif
                         <td></td>
                         <td></td>
+                        <td></td>
                       </tr>
                     @endforeach
                 </table>
