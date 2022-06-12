@@ -48,37 +48,42 @@ class HomeController extends Controller
     }
 
     public function appointment(Request $request)
-    {
-        $validated = $request->validate([
-            'name' => 'required',
-            'email' => 'required',
-            'date' => 'required',
-            'number' => 'required',
-            'doctor' => 'required',
-            'message' => 'required',
-        ]);
-        
-        $data = new appointment;
-        $data->name= $request->name;
-            $data->email= $request->email;
-            $data->date= $request->date;
-            $data->phone= $request->number;
-            $data->message= $request->message;
-            $data->doctor= $request->doctor;
-            $data->status='In Progress';
-        if(Auth::id())
-        {
-        $data->user_id= Auth::user()->id;
-        }
+    {            
+            $validated = $request->validate([
+                'name' => 'required',
+                'email' => 'required',
+                'date' => 'required',
+                'number' => 'required',
+                'doctor' => 'required',
+                'message' => 'required',
+            ]);
+            
+            $data = new appointment;
+            $data->name= $request->name;
+                $data->email= $request->email;
+                $data->date= $request->date;
+                $data->phone= $request->number;
+                $data->message= $request->message;
+                $data->doctor= $request->doctor;
+                $data->status='In Progress';
+                if(!$validated){ 
+                    return redirect()->back();
+                }
+            if(Auth::id())
+            {
+            $data->user_id= Auth::user()->id;
+            }
 
-        if($data->doctor=="--- Select Doctor ---")
-        {
-            $data->doctor=null;
-            return redirect()->back()->with('message2', 'Select a Doctor');    
-        }
-        $data->save();
-        return redirect()->back()->with('message', 'Appointment Request Successful. We well contact with you soon');
+            if($data->doctor=="--- Select Doctor ---")
+            {
+                $data->doctor=null;
+                return redirect()->back()->with('message2', 'Select a Doctor');    
+            }
+            $data->save();
+            return redirect()->back()->with('message', 'Appointment Request Successful. We well contact with you soon');
         
+    
+     
         // $data = new appointment;
         // $data->name= $request->name;
         // $data->email= $request->email;

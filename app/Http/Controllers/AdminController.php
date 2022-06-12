@@ -50,42 +50,55 @@ class AdminController extends Controller
     }
 
     public function upload(Request $request){
-        $doctor=new doctor;
-
-        $image=$request->file;
-###Fix gagal kalo ga ada foto####
-        if($request -> hasFile('file')){
-
-        $imagename=time().'.'.$image->getClientOriginalExtension();
-        $request->file->move('doctorimage',$imagename);
-
-        $doctor->image=$imagename;
-        $doctor->name=$request->name;
-        $doctor->phone=$request->number;
-        $doctor->room=$request->room;
-        $doctor->speciality=$request->speciality;
-        
-        }else{
-            if($doctor->speciality=="--Select--")
+        if(Auth::id())
+        {
+            if(Auth::user()->usertype==2)
             {
-                return redirect()->back()->with('message2', 'Select speciality');    
+                $doctor=new doctor;
+
+                $image=$request->file;
+        ###Fix gagal kalo ga ada foto####
+                if($request -> hasFile('file')){
+
+                $imagename=time().'.'.$image->getClientOriginalExtension();
+                $request->file->move('doctorimage',$imagename);
+
+                $doctor->image=$imagename;
+                $doctor->name=$request->name;
+                $doctor->phone=$request->number;
+                $doctor->room=$request->room;
+                $doctor->speciality=$request->speciality;
+                
+                }else{
+                    if($doctor->speciality=="--Select--")
+                    {
+                        return redirect()->back()->with('message2', 'Select speciality');    
+                    }
+                    return redirect()->back()->with('message2', 'Select image!');
+                    // $imagename ='';
+                    // $doctor->image =$imagename;
+                    // $doctor->name=$request->name;
+                    // $doctor->phone=$request->number;
+                    // $doctor->room=$request->room;
+                    // $doctor->speciality=$request->speciality;
+                
+                }
+                if($doctor->speciality=="--Select--")
+                    {
+                        return redirect()->back()->with('message2', 'Select speciality');    
+                    }
+                $doctor->save();
+
+                return redirect()->back()->with('message', 'Doctor Added Successfully');
             }
-            return redirect()->back()->with('message2', 'Select image!');
-            // $imagename ='';
-            // $doctor->image =$imagename;
-            // $doctor->name=$request->name;
-            // $doctor->phone=$request->number;
-            // $doctor->room=$request->room;
-            // $doctor->speciality=$request->speciality;
-        
+            else{
+                return redirect()->back();
+            }
         }
-        if($doctor->speciality=="--Select--")
-            {
-                return redirect()->back()->with('message2', 'Select speciality');    
-            }
-        $doctor->save();
-
-        return redirect()->back()->with('message', 'Doctor Added Successfully');
+        else
+        {
+            return redirect('login');
+        }
     }
 
     public function edit_doctor($id)
@@ -114,43 +127,69 @@ class AdminController extends Controller
 
     public function update_doctor(Request $request, $id)
     {
-        $doctor = Doctor:: find($id);
-       if(!$doctor){ 
-        return redirect()->back()->with('error', 'Doctor Not Found');
-       }
-        
-        $doctor->name= $request->name;
-        $doctor->phone= $request->phone;
-        $doctor->speciality= $request->speciality;
-        $doctor->room= $request->room;
-        $image=$request->file;
-            if($request -> hasFile('file')){
-                
-                $path= 'doctorimage'.$doctor->image;
-                if(File::exists($path)){
-                    File::delete($path);
-                }
-
-            $imagename=time().'.'.$image->getClientOriginalExtension();
-            $request->file->move('doctorimage',$imagename);
-            $doctor->image=$imagename;
+        if(Auth::id())
+        {
+            if(Auth::user()->usertype==2)
+            {
+                $doctor = Doctor:: find($id);
+            if(!$doctor){ 
+                return redirect()->back()->with('error', 'Doctor Not Found');
             }
-        
-        $doctor->update();
-        return redirect()->to('/doctor_view')->with('message', 'Doctor Updated Successfully');
-        
+                
+                $doctor->name= $request->name;
+                $doctor->phone= $request->phone;
+                $doctor->speciality= $request->speciality;
+                $doctor->room= $request->room;
+                $image=$request->file;
+                    if($request -> hasFile('file')){
+                        
+                        $path= 'doctorimage'.$doctor->image;
+                        if(File::exists($path)){
+                            File::delete($path);
+                        }
+
+                    $imagename=time().'.'.$image->getClientOriginalExtension();
+                    $request->file->move('doctorimage',$imagename);
+                    $doctor->image=$imagename;
+                    }
+                
+                $doctor->update();
+                return redirect()->to('/doctor_view')->with('message', 'Doctor Updated Successfully');
+            }
+            else{
+                return redirect()->back();
+            }
+        }
+        else
+        {
+            return redirect('login');
+        }        
     }
 
     public function destroy_doctor($id)
     {
-      $doctor = doctor:: find($id);
-      $path= 'doctorimage'.$doctor->image;
-      if(File::exists($path))
-      {
-        File::delete($path);
-      }
-      $doctor->delete();        
-      return redirect()->to('/doctor_view')->with('message', 'Doctor Deleted Successfully');
+        if(Auth::id())
+        {
+            if(Auth::user()->usertype==2)
+            {
+            
+            $doctor = doctor:: find($id);
+            $path= 'doctorimage'.$doctor->image;
+            if(File::exists($path))
+            {
+                File::delete($path);
+            }
+            $doctor->delete();        
+            return redirect()->to('/doctor_view')->with('message', 'Doctor Deleted Successfully');
+        }
+        else{
+            return redirect()->back();
+        }
+    }
+    else
+    {
+        return redirect('login');
+    }    
     }
     
 
@@ -205,6 +244,10 @@ public function showappointment()
 
     public function approved($id)
     {
+        if(Auth::id())
+        {
+            if(Auth::user()->usertype==1)
+            {
 
         $decryptID = Crypt::decryptString($id);
         //find specific id from table appointment
@@ -215,7 +258,15 @@ public function showappointment()
 
         $data->save();
         return redirect()->back()->with('message', 'Done !');  
-        
+            }
+            else{
+                return redirect()->back();
+            }
+        }
+        else
+        {
+            return redirect('login');
+        }
 
         // //find specific id from table appointment
         // $data=appointment::find($id);
@@ -229,15 +280,29 @@ public function showappointment()
 
     public function canceled($id)
     {
+        if(Auth::id())
+        {
+            if(Auth::user()->usertype==1)
+            {
+
         $decryptID = Crypt::decryptString($id);
         //find specific id from table appointment
         $data=appointment::find($decryptID);
 
         //change column's value from "in Progress" to "Approved"
-        $data->status='Canceled';
+        $data->status='Approved';
 
         $data->save();
-        return redirect()->back()->with('message', 'Done !');
+        return redirect()->back()->with('message', 'Done !');  
+            }
+            else{
+                return redirect()->back();
+            }
+        }
+        else
+        {
+            return redirect('login');
+        }
 
         // //find specific id from table appointment
         // $data=appointment::find($id);

@@ -31,7 +31,7 @@
             <div align="center" style="padding-top: 100px">
             @if(session()->has('message'))
 
-            <div class="alert alert-danger" role="alert">
+            <div class="alert alert-success" role="alert">
                 <button type="button" class="close" data-bs-dismiss="alert">x</button>
                 {{session()->get('message')}}
             </div>

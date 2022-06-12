@@ -30,22 +30,35 @@ class PharmacistController extends Controller
 
     public function create(Request $request)
     {
-        $validated = $request->validate([
-            'name' => 'required',
-            'stock' => 'required',
-            'expired' => 'required',
-        ]);
-        
-        $data = new medicine;
-        $data->name= $request->name;
-            $data->stock= $request->stock;
-            $data->description= $request->description;
-            $data->created_at= $request->created_at;
-            $data->expired= $request->expired;
-        
-        $data->save();
-        return redirect()->back()->with('message', 'Medicine Added Successfully');
-        
+        if(Auth::id())
+        {
+            if(Auth::user()->usertype==3)
+            {
+                $validated = $request->validate([
+                    'name' => 'required',
+                    'stock' => 'required',
+                    'expired' => 'required',
+                ]);
+                
+                $data = new medicine;
+                $data->name= $request->name;
+                    $data->stock= $request->stock;
+                    $data->description= $request->description;
+                    $data->created_at= $request->created_at;
+                    $data->expired= $request->expired;
+                if(!$validated){ 
+                    return redirect()->back();
+                }
+                
+                $data->save();
+                return redirect()->back()->with('message', 'Medicine Added Successfully');
+            }
+            else{
+                return redirect()->back();
+            }
+        }else{
+            return redirect('login');
+        }   
     }
     
     public function add()
@@ -93,27 +106,46 @@ class PharmacistController extends Controller
 
     public function update(Request $request, $id)
     {
-        $data = Medicine:: find($id);
-       if(!$data){
-        return redirect()->back()->with('error', 'Medicine Data Not Found');
-       }
-        
-        $data->name= $request->name;
-            $data->stock= $request->stock;
-            $data->description= $request->description;
-            $data->created_at= $request->created_at;
-            $data->expired= $request->expired;
-        
-        $data->save();
-        return redirect()->to('/medicine')->with('message', 'Medicine Updated Successfully');
-        
+        if(Auth::user()->usertype==3)
+            {
+                $data = Medicine:: find($id);
+            if(!$data){
+                return redirect()->back()->with('error', 'Medicine Data Not Found');
+            }
+                
+                $data->name= $request->name;
+                    $data->stock= $request->stock;
+                    $data->description= $request->description;
+                    $data->created_at= $request->created_at;
+                    $data->expired= $request->expired;
+                
+                $data->save();
+                return redirect()->to('/medicine')->with('message', 'Medicine Updated Successfully');
+            }
+            else{
+                return redirect()->back();
+            }
     }
 
     public function destroy($id)
     {
-      $data = medicine:: find($id);
-      $data->delete();        
-      return redirect()->to('/medicine')->with('message', 'Medicine Deleted Successfully');
+        
+        if(Auth::id())
+        {
+            if(Auth::user()->usertype==3)
+            {
+                $data = medicine:: find($id);
+                $data->delete();        
+                return redirect()->to('/medicine')->with('message', 'Medicine Deleted Successfully');
+            }
+            else{
+                return redirect()->back();
+            }
+        }
+        else
+        {
+            return redirect('login');
+        }  
     }
     
 

@@ -14,7 +14,7 @@
                 <th style="padding:10px; font-size:20px; color:white">Message</th>
                 <th style="padding:10px; font-size:20px; color:white">Status</th>
                 <th style="padding:10px; font-size:20px; color:white">Cancel Appointment</th>
-                <th style="padding:10px"><a href="{{url('print_user')}}" target="_blank"class="btn btn-primary">Print PDF</a></th>
+                <th style="padding:10px"><a href="{{url('print_user')}}" target="_blank" class="btn btn-primary">Print PDF</a></th>
             </tr>
             <!-- show the appointment -->
             @foreach($appoint as $appoints)

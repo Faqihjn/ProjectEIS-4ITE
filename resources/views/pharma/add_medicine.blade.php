@@ -45,6 +45,13 @@
                 <button type="button" class="close" data-bs-dismiss="alert">x</button>
                 {{session()->get('message')}}
             </div>
+            @endif
+            @if(session()->has('message2'))
+
+            <div class="alert alert-danger" role="alert">
+                <button type="button" class="close" data-bs-dismiss="alert">x</button>
+                {{session()->get('message2')}}
+            </div>
             @endif    
             <form action="{{url('create')}}" method="POST">
 
