@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Crypt;
 use App\Models\User;
 use App\Models\Doctor;
 use App\Models\Appointment;
@@ -133,10 +134,22 @@ class HomeController extends Controller
 
     public function cancel_appoint($id)
     {
-        //catch the specific appointment's id
-        $data=appointment::find($id);
-        $data->delete();
-        return redirect()->back();
+        if(Auth::id())
+        {
+            if(Auth::user()->usertype==0)
+            {
+                $decryptID = Crypt::decryptString($id);
+            //find specific id from table appointment
+                $data=appointment::find($decryptID);
+        
+                $data->delete();
+                return redirect()->back();
+            }
+            else
+            {
+                return redirect()->back();
+            }
+        }
 
     }
 

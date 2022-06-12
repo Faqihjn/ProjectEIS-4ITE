@@ -51,6 +51,7 @@ class AdminController extends Controller
 
     public function upload(Request $request){
         $doctor=new doctor;
+
         $image=$request->file;
 ###Fix gagal kalo ga ada foto####
         if($request -> hasFile('file')){
@@ -65,22 +66,23 @@ class AdminController extends Controller
         $doctor->speciality=$request->speciality;
         
         }else{
-            $imagename ='';
-            $doctor->image =$imagename;
-            $doctor->name=$request->name;
-            $doctor->phone=$request->number;
-            $doctor->room=$request->room;
-            $doctor->speciality=$request->speciality;
+            if($doctor->speciality=="--Select--")
+            {
+                return redirect()->back()->with('message2', 'Select speciality');    
+            }
+            return redirect()->back()->with('message2', 'Select image!');
+            // $imagename ='';
+            // $doctor->image =$imagename;
+            // $doctor->name=$request->name;
+            // $doctor->phone=$request->number;
+            // $doctor->room=$request->room;
+            // $doctor->speciality=$request->speciality;
         
         }
         if($doctor->speciality=="--Select--")
-        {
-
-            $doctor->speciality=null;
-            return redirect()->back()->with('message2', 'Select speciality');    
-        }
-       
-
+            {
+                return redirect()->back()->with('message2', 'Select speciality');    
+            }
         $doctor->save();
 
         return redirect()->back()->with('message', 'Doctor Added Successfully');

@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\Seeder;
 use App\Models\User;
 use App\Models\Appointment;
@@ -25,7 +26,7 @@ class DatabaseSeeder extends Seeder
             'phone'=> '08123456789',
             'address'=> 'Depok',
             'usertype'=> '0',
-            'password'=>md5('12345678'),
+            'password' => Hash::make('12345678'),
         ]);
         User::create([
             'name' => 'admin',
@@ -33,7 +34,7 @@ class DatabaseSeeder extends Seeder
             'phone'=> '081234567890',
             'address'=> 'Jakarta',
             'usertype'=> '1',
-            'password'=>md5('12345678'),
+            'password' => Hash::make('12345678'),
         ]);
         User::create([
             'name' => 'manajemen',
@@ -42,7 +43,7 @@ class DatabaseSeeder extends Seeder
             'address'=> 'Jakarta',
             'usertype'=> '2',
             'phone'=> '081234567891',
-            'password'=>md5('12345678'),
+            'password' => Hash::make('12345678'),
         ]);
         User::create([
             'name' => 'apoteker',
@@ -50,7 +51,7 @@ class DatabaseSeeder extends Seeder
             'phone'=> '081234567892',
             'address'=> 'Depok',
             'usertype'=> '3',
-            'password'=>md5('12345678'),
+            'password' => Hash::make('12345678'),
         ]);
 
         Appointment::create([
@@ -69,6 +70,7 @@ class DatabaseSeeder extends Seeder
             'phone'=> '0123456789',
             'speciality'=> 'General Health',
             'room'=> '001',
+            'image' => 'example.jpg'
         ]);
 
         Medicine::create([

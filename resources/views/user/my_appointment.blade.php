@@ -24,7 +24,7 @@
                 <td style="padding:10px; font-size:20px; color:white">{{$appoints->message}}</td>
                 <td style="padding:10px; font-size:20px; color:white">{{$appoints->status}}</td>
                 <!-- delete specific appointment. send the id with this url to web.php -->
-                <td><a class="btn btn-danger" onclick="return confirm('are you sure to delete this?')" href="{{url('cancel_appoint',$appoints->id)}}">Cancel</a></td>
+                <td><a class="btn btn-danger" onclick="return confirm('are you sure to delete this?')" href="{{url('cancel_appoint',Crypt::encryptString($appoints->id))}}">Cancel</a></td>
                 <td></td>
             </tr>
             @endforeach
